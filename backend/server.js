@@ -9,8 +9,8 @@ const app = express();
 const server = require('http').Server(app);
 
 const appConfig = require('./config');
+const errors = require('./services/error-service');
 
-const errors = require('./services/errors');
 let mongoPromise = require('./services/mongo-service');
 
 app.use(logger('dev'));
@@ -25,9 +25,11 @@ app.use(function(req, res, next) {
   next();
 });
 
-const timelogRoute = require('./routes/timelog');
+const productRoutes = require('./routes/products');
+const categoriesRoutes = require('./routes/categories');
 
-app.use('/v1/invite', inviteRoute);;
+app.use('/api/product', productRoutes);
+app.use('/api/categories', categoriesRoutes);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -36,10 +38,17 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
   console.error(err);
-  res.send({
-    success: false,
-    error: err
-  });
+  if (err.name && (err.name == 'ValidationError' || err.name == 'CastError')) {
+    res.send({
+      success: false,
+      error: errors.api.bad_params
+    });
+  } else {
+    res.send({
+      success: false,
+      error: err
+    });
+  }
 });
 
 mongoPromise.then(() => {
