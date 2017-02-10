@@ -32,7 +32,7 @@ router.get('/', (req, res, next) => {
     .then((items) => {
       return res.send({
         success: true,
-        product: items
+        products: items
       });
     })
     .catch(next);
