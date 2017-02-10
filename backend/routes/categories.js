@@ -4,40 +4,76 @@ const express = require('express');
 const errors = require('./../services/error-service');
 const router = express.Router();
 
+const Category = require('./../models/category');
+const Product = require('./../models/product');
+
 /**
- * Update invite object
- * TODO now supported only role updating
+ * @api {get} /api/categories Return categories list
+ *
+ * @apiSuccess {Boolean} success
+ * @apiSuccess {Array} categories Array of categories
  */
-router.post('/update-invite/:inviteId', (req, res, next) => {
-  if (!req.body.role) {
-    return next(errors.api.bad_params);
-  }
-  Invite
-    .findById(req.params.inviteId)
-    .then(invite => { // Find invite object
-      if (!invite) {
-        throw errors.api.object_not_found;
+router.get('/', (req, res, next) => {
+  Category
+    .find()
+    .then((items) => {
+      if (!items) {
+        items = [{_id: null, title: 'Без категории'}];
+      } else {
+        items.push({_id: null, title: 'Без категории'});
       }
-      return invite;
-    })
-    .then(invite => { // Check access to update changes
-      return TeamMember
-        .checkAccess(invite.to_team, req.user._id, 'write')
-        .then(() => invite);
-    })
-    .then(invite => { // Update invite
-      if (req.body.role) {
-        invite.team_role = req.body.role;
-        return invite.save().then(() => invite);
-      }
-      return invite;
-    })
-    .then(invite => { // Send response
       return res.send({
         success: true,
-        invite: invite
+        categories: items
       });
     })
+    .catch(next);
+});
+
+/**
+ * @api {post} /api/categories/add Create new category
+ *
+ * @apiParam {String} title Category title
+ *
+ * @apiSuccess {Boolean} success
+ * @apiSuccess {Object} New category object
+ */
+router.post('/add', (req, res, next) => {
+  if (!req.body || Object.keys(req.body).length == 0) {
+    return next(errors.api.bad_params);
+  }
+
+  let item = new Category(req.body);
+  item
+    .save()
+    .then(() => {
+      return res.send({
+        success: true,
+        category: item
+      });
+    })
+    .catch(next);
+});
+
+/**
+ * @api {get} /api/categories/delete/:categoryId Remove category
+ *
+ * @apiParam {String} categoryId CategoryId
+ *
+ * @apiSuccess {Boolean} success
+ */
+router.get('/delete/:categoryId', (req, res, next) => {
+  Product
+    .findAndUpdate({category: req.params.categoryId}, {set: {category: null}})
+    .then(() => {
+      return Category.findByIdAndRemove(req.params.categoryId);
+    })
+    .then(() => {
+      return res.send({
+        success: true
+      });
+    })
+    .catch(next);
 });
 
 module.exports = router;
