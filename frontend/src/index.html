@@ -10,6 +10,145 @@
   <script type="application/javascript" src="js/bundle.js"></script>
 </head>
 <body>
-  
+  <br><br>
+  <div class="container" ng-controller="mainController as mainCtrl">
+    <div class="col-md-3">
+      <div class="row text-center">
+        <img src="./img/logo.png" style="width: 100px;">
+      </div>
+      <br>
+      <br>
+      <div class="row" ng-controller="categoryController as catCtrl">
+        <div class="list-group">
+          <a href
+             class="list-group-item"
+             ng-repeat="category in catCtrl.categories"
+             ng-click="catCtrl.selectCategory(category._id);"
+             ng-class="{'active': catCtrl.currentCategory == category._id || (!catCtrl.currentCategory && !category._id)}">
+            <button type="button" 
+                    class="btn btn-link" 
+                    ng-if="category._id != 'null'"
+                    ng-click="catCtrl.removeCategory(category)">
+              <span class="glyphicon glyphicon-trash"></span>
+            </button>
+            {{category.title}}
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="row">
+        <button type="button" class="btn btn-primary" ng-click="mainCtrl.addProductModal()">Добавить продукт</button>
+        <button type="button" class="btn btn-info" ng-click="mainCtrl.addCategoryModal()">Добавить категорию</button>
+      </div>
+      <div class="row" ng-controller="productController as prodCtrl">
+        <table class="table table-striped table-responsive table-hovered">
+          <tr>
+            <th>ID</th>
+            <th>Название товара</th>
+            <th>Цена / закуп</th>
+            <th>Цена</th>
+            <th></th>
+          </tr>
+          <tr ng-repeat="product in prodCtrl.products">
+            <td>{{product.productId}}</td>
+            <td>{{product.title}}</td>
+            <td>{{product.cost}}</td>
+            <td>{{product.retail_cost}}</td>
+            <td>
+              <button type="button" 
+                      class="btn btn-warning"
+                      ng-click="prodCtrl.editModal(product)">
+                <span class="glyphicon glyphicon-edit"></span>
+              </button>
+              <button type="button"
+                      class="btn btn-danger"
+                      ng-click="prodCtrl.removeModal(product)">
+                <span class="glyphicon glyphicon-trash"></span>
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/ng-template" id="confirmRemove.html">
+    <div class="modal-header">
+      <h3 class="modal-title">{{title}}</h3>
+    </div>
+    <div class="modal-body">
+      <p>{{message}}</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="button" ng-click="yes()">Да</button>
+      <button class="btn btn-warning" type="button" ng-click="no()">Нет</button>
+    </div>
+  </script>
+
+  <script type="text/ng-template" id="addCategory.html">
+    <div class="modal-header">
+      <button type="button" 
+              class="close" 
+              data-dismiss="modal" 
+              aria-label="Close"
+              ng-click="cancel()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h3 class="modal-title">Добавить категорию</h3>
+    </div>
+    <div class="modal-body">
+      <div class="">
+        <input type="text" class="form-control" ng-model="title">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="button" ng-click="yes()">Сохранить</button>
+    </div>
+  </script>
+
+  <script type="text/ng-template" id="editProduct.html">
+    <div class="modal-header">
+      <button type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              ng-click="cancel()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h3 class="modal-title">{{title}}</h3>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="prod-category">Категория</label>
+        <select class="form-control" 
+                id="prod-category" 
+                ng-model="product.category"
+                ng-options="category._id as category.title for category in categories track by category._id">
+        </select>
+      </div>
+      <div class="form-group">
+        <input type="text" 
+               class="form-control"
+               ng-model="product.title"
+               placeholder="Название продукта">
+      </div>
+      <div class="form-group">
+        <input type="text" 
+               class="form-control"
+               ng-model="product.cost"
+               placeholder="Закупочная стоимость">
+      </div>
+      <div class="form-group">
+        <input type="text"
+               class="form-control"
+               ng-model="product.retail_cost"
+               placeholder="Розничная цена">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="button" ng-click="yes()">Сохранить</button>
+    </div>
+  </script>
 </body>
 </html>

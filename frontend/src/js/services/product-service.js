@@ -16,7 +16,7 @@ function productService(
     } else {
       category = '?category=' + category;
     }
-    return apiService.call('GET', '/products' + category).then(res => res.products);
+    return apiService.callApi('GET', '/products' + category).then(res => res.products);
   };
 
   /**
@@ -28,7 +28,7 @@ function productService(
     if (!params || !params.title || typeof params.cost == 'undefined' || typeof params.retail_cost == 'undefined') {
       return Promise.reject('bad_params');
     }
-    return apiService.call('POST', '/products/add', params).then(res => res.product);
+    return apiService.callApi('POST', '/products/add', params).then(res => res.product);
   };
 
   /**
@@ -40,7 +40,7 @@ function productService(
     if (!params || typeof params.productId == 'undefined') {
       return Promise.reject('bad_params');
     }
-    return apiService.call('POST', '/products/update/' + params.productId, params).then(res => res.product);
+    return apiService.callApi('POST', '/products/update/' + params.productId, params).then(res => res.product);
   };
 
   /**
@@ -52,7 +52,7 @@ function productService(
     if (!productId) {
       return Promise.reject('bad_params');
     }
-    return apiService.call('GET', '/products/delete/' + productId).then(res => res.success);
+    return apiService.callApi('GET', '/products/delete/' + productId).then(res => res.success);
   };
 
   return this;

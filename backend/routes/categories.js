@@ -64,7 +64,7 @@ router.post('/add', (req, res, next) => {
  */
 router.get('/delete/:categoryId', (req, res, next) => {
   Product
-    .findAndUpdate({category: req.params.categoryId}, {set: {category: null}})
+    .update({category: req.params.categoryId}, {set: {category: null}})
     .then(() => {
       return Category.findByIdAndRemove(req.params.categoryId);
     })

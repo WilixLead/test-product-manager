@@ -28,7 +28,7 @@ app.use(function(req, res, next) {
 const productRoutes = require('./routes/products');
 const categoriesRoutes = require('./routes/categories');
 
-app.use('/api/product', productRoutes);
+app.use('/api/products', productRoutes);
 app.use('/api/categories', categoriesRoutes);
 
 // catch 404 and forward to error handler

@@ -12,7 +12,7 @@ require('babelify-es6-polyfill');
 const buildConfig = require('./build.config');
 
 let currentBuildEnv = 'prod';
-let outDir = __dirname + '/../static';
+let outDir = __dirname + '/static';
 
 function handleError(err) {
   console.log(err.toString());
@@ -32,10 +32,8 @@ gulp.task('files', () => {
 });
 
 gulp.task('styles', function () {
-  gulp.src(npmStyles).pipe(gulp.dest(outDir + '/css'));
-
   return gulp.src('src/css/**/*.css')
-    .pipe(minifyCSS({keepBreaks: false}))
+    // .pipe(minifyCSS({keepBreaks: false}))
     .pipe(gulp.dest(outDir + '/css'));
 });
 
@@ -43,7 +41,7 @@ gulp.task('javascript', () => {
   return browserify({
     entries: 'src/js/app.js'
   })
-    .transform('babelify', {presets: ["stage-0-promises", "es2015"]})
+    .transform('babelify', {presets: ["es2015"]})
     .bundle().on('error', handleError)
     .pipe(source('bundle.js'))
     .pipe(batchReplace(buildConfig[currentBuildEnv]))
@@ -76,14 +74,6 @@ gulp.task('build', [
   done();
 });
 
-gulp.task('server', function(){
-  connect.server({
-    root: '../static',
-    port: 5885,
-    fallback: '../static/index.html'
-  })
-});
-
 gulp.task('setDevEnv', () => {
   currentBuildEnv = 'dev';
 });
@@ -91,4 +81,4 @@ gulp.task('setDevEnv', () => {
 gulp.task('dev', ['setDevEnv', 'default']);
 
 // Use default task.
-gulp.task('default', ['watch', 'server']);
+gulp.task('default', ['watch']);
