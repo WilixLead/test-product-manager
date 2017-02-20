@@ -6,6 +6,7 @@
   <base href="${HTML_BASE_HREF}$">
 
   <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
 
   <script type="application/javascript" src="js/bundle.js"></script>
 </head>
@@ -13,12 +14,10 @@
   <br><br>
   <div class="container" ng-controller="mainController as mainCtrl">
     <div class="col-md-3">
-      <div class="row text-center">
-        <img src="./img/logo.png" style="width: 100px;">
+      <div class="text-center">
+        <img src="./img/logo.png" id="logo">
       </div>
-      <br>
-      <br>
-      <div class="row" ng-controller="categoryController as catCtrl">
+      <div id="category-list" ng-controller="categoryController as catCtrl">
         <div class="list-group">
           <a href
              class="list-group-item"
@@ -37,12 +36,12 @@
       </div>
     </div>
     <div class="col-md-9">
-      <div class="row">
+      <div id="toolbar">
         <button type="button" class="btn btn-primary" ng-click="mainCtrl.addProductModal()">Добавить продукт</button>
         <button type="button" class="btn btn-info" ng-click="mainCtrl.addCategoryModal()">Добавить категорию</button>
       </div>
-      <div class="row" ng-controller="productController as prodCtrl">
-        <table class="table table-striped table-responsive table-hovered">
+      <div id="product-list" ng-controller="productController as prodCtrl">
+        <table class="table table-striped table-hover">
           <tr>
             <th>ID</th>
             <th>Название товара</th>
@@ -119,31 +118,35 @@
       <h3 class="modal-title">{{title}}</h3>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="form-group" ng-class="{'has-error': err.category}">
         <label for="prod-category">Категория</label>
         <select class="form-control" 
                 id="prod-category" 
                 ng-model="product.category"
                 ng-options="category._id as category.title for category in categories track by category._id">
         </select>
+        <span class="help-block" ng-show="err.title">Это поле должно быть заполнено</span>
       </div>
-      <div class="form-group">
+      <div class="form-group" ng-class="{'has-error': err.title}">
         <input type="text" 
                class="form-control"
                ng-model="product.title"
                placeholder="Название продукта">
+        <span class="help-block" ng-show="err.title">Это поле должно быть заполнено</span>
       </div>
-      <div class="form-group">
+      <div class="form-group" ng-class="{'has-error': err.cost}">
         <input type="text" 
                class="form-control"
                ng-model="product.cost"
                placeholder="Закупочная стоимость">
+        <span class="help-block" ng-show="err.cost">Это поле должно быть заполнено</span>
       </div>
-      <div class="form-group">
+      <div class="form-group" ng-class="{'has-error': err.retail_cost}">
         <input type="text"
                class="form-control"
                ng-model="product.retail_cost"
                placeholder="Розничная цена">
+        <span class="help-block" ng-show="err.retail_cost">Это поле должно быть заполнено</span>
       </div>
     </div>
     <div class="modal-footer">
