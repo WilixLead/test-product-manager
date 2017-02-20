@@ -2,7 +2,7 @@
 
 let config = {
   server: {
-    port: 5687,
+    port: 5688,
     mongodb: 'mongodb://localhost/test-product-manager',
   }
 };

@@ -1,10 +1,10 @@
 module.exports = {
   prod: [
-    ['${API_URL}$', 'http://wilix.ru:5687/api'],
-    ['${HTML_BASE_HREF}$', 'https://wilix.ru/test-project/test-product-manager']
+    ['${API_URL}$', 'http://wilix.ru:5688/api'],
+    ['${HTML_BASE_HREF}$', 'http://wilix.ru:5688/']
   ],
   dev: [
-    ['${API_URL}$', 'http://localhost:5687/api'],
+    ['${API_URL}$', 'http://localhost:5688/api'],
     ['${HTML_BASE_HREF}$', '/']
   ]
 };
