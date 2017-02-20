@@ -122,8 +122,8 @@
         <label for="prod-category">Категория</label>
         <select class="form-control" 
                 id="prod-category" 
-                ng-model="product.category"
-                ng-options="category._id as category.title for category in categories track by category._id">
+                ng-model="product.category">
+          <option value="{{category._id}}" ng-repeat="category in categories">{{category.title}}</option>
         </select>
         <span class="help-block" ng-show="err.title">Это поле должно быть заполнено</span>
       </div>

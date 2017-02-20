@@ -1,7 +1,7 @@
 'use strict';
 
 function productController(
-  $scope,
+  $rootScope,
   $uibModal,
   productService
 ) {
@@ -16,10 +16,8 @@ function productController(
       animation: true,
       templateUrl: 'editProduct.html',
       size: 'sm',
-      controller: function($scope, $uibModalInstance, categoryService) {
+      controller: function($scope, $uibModalInstance, categoryService, $timeout) {
         $scope.title = 'Изменить продукт';
-        $scope.product = angular.copy(product);
-        $scope.product.category = $scope.product.category + ''; 
         $scope.categories = [];
         $scope.err = {};
         
@@ -47,7 +45,12 @@ function productController(
           $uibModalInstance.dismiss();
         };
 
-        categoryService.getCategories().then(items => $scope.categories = items);
+        categoryService.getCategories().then(items => {
+          $timeout(() => {
+            $scope.categories = items;
+            $scope.product = product;
+          });
+        });
       }
     });
   };
@@ -74,13 +77,13 @@ function productController(
       }
     });
   };
-  
-  $scope.$on('categoryChanged', (event, categoryId) => {
+
+  $rootScope.$on('categoryChanged', (event, categoryId) => {
     vm.currentCategory = categoryId;
     productService.getProducts(categoryId).then(items => vm.products = items || []);
   });
 
-  $scope.$on('productAdded', (event, product) => {
+  $rootScope.$on('productAdded', (event, product) => {
     if (vm.currentCategory == product.category || (!vm.currentCategory && !product.category)) {
       vm.products.push(product);
     }

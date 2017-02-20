@@ -38,7 +38,7 @@ function mainController(
       animation: true,
       templateUrl: 'editProduct.html',
       size: 'sm',
-      controller: function($scope, $uibModalInstance, categoryService) {
+      controller: function($scope, $uibModalInstance, categoryService, $timeout) {
         $scope.title = 'Добавить продукт';
         $scope.product = {
           category: vm.currentCategory,
@@ -69,7 +69,9 @@ function mainController(
           $uibModalInstance.dismiss();
         };
 
-        categoryService.getCategories().then(items => $scope.categories = items);
+        categoryService.getCategories().then(items => {
+          $timeout(() => {$scope.categories = items});
+        });
       }
     });
   };

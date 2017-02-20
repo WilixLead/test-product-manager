@@ -1,7 +1,7 @@
 'use strict';
 
 function categoryController(
-  $scope,
+  $rootScope,
   $uibModal,
   categoryService
 ) {
@@ -20,7 +20,7 @@ function categoryController(
   
   vm.selectCategory = function(categoryId) {
     vm.currentCategory = categoryId;
-    $scope.$parent.$broadcast('categoryChanged', categoryId);
+    $rootScope.$broadcast('categoryChanged', categoryId);
   };
   
   vm.removeCategory = function(category) {
@@ -45,8 +45,8 @@ function categoryController(
       }
     });
   };
-  
-  $scope.$on('updateCategoryList', () => {
+
+  $rootScope.$on('updateCategoryList', () => {
     vm.getCategories();
   });
   
