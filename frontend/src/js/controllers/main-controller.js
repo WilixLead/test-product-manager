@@ -21,7 +21,7 @@ function mainController(
           categoryService.addCategory({
             title: $scope.title
           }).then(() => {
-            $scope.$broadcast('updateCategoryList');
+            $rootScope.$broadcast('updateCategoryList');
             $scope.cancel();
           });
         };
