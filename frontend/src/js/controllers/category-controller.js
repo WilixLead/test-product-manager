@@ -43,11 +43,15 @@ function categoryController(
           $uibModalInstance.dismiss();
         }
       }
-    });
+    }).result.catch(() => {});
   };
 
   $rootScope.$on('updateCategoryList', () => {
     vm.getCategories();
+  });
+  
+  $rootScope.$on('changeCategory', (ev, data) => {
+    vm.selectCategory(data);
   });
   
   vm.getCategories();

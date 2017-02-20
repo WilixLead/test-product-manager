@@ -16,12 +16,15 @@ function mainController(
       animation: true,
       templateUrl: 'addCategory.html',
       size: 'sm',
-      controller: function($scope, $uibModalInstance) {
+      controller: function($scope, $uibModalInstance, $timeout) {
         $scope.yes = function() {
           categoryService.addCategory({
             title: $scope.title
-          }).then(() => {
+          }).then((category) => {
             $rootScope.$broadcast('updateCategoryList');
+            $timeout(() => {
+              $rootScope.$broadcast('changeCategory', category._id);
+            }, 2000);
             $scope.cancel();
           });
         };
@@ -30,7 +33,7 @@ function mainController(
           $uibModalInstance.dismiss();
         }
       }
-    });
+    }).result.catch(() => {});
   };
 
   vm.addProductModal = function() {
@@ -61,6 +64,9 @@ function mainController(
           
           productService.addProduct($scope.product).then((newProduct) => {
             $rootScope.$broadcast('productAdded', newProduct);
+            if (newProduct.category != vm.currentCategory) {
+              $rootScope.$broadcast('changeCategory', newProduct.category);
+            }
             $scope.cancel();
           });
         };
@@ -73,7 +79,7 @@ function mainController(
           $timeout(() => {$scope.categories = items});
         });
       }
-    });
+    }).result.catch(() => {});
   };
 
   $rootScope.$on('categoryChanged', (event, categoryId) => {

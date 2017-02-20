@@ -24,8 +24,8 @@ function productController(
         $scope.yes = function() {
           let hasErrors = false;
           if (!$scope.product.title) { $scope.err.title = true; hasErrors = true; } else { $scope.err.title = false; }
-          if (!$scope.product.cost) { $scope.err.cost = true; hasErrors = true; } else { $scope.err.cost = false; }
-          if (!$scope.product.retail_cost) { $scope.err.retail_cost = true; hasErrors = true; } else { $scope.err.retail_cost = false; }
+          if (!$scope.product.cost || !/\d+/.test($scope.product.cost)) { $scope.err.cost = true; hasErrors = true; } else { $scope.err.cost = false; }
+          if (!$scope.product.retail_cost || !/\d+/.test($scope.product.retail_cost)) { $scope.err.retail_cost = true; hasErrors = true; } else { $scope.err.retail_cost = false; }
           if (hasErrors) {
             return;
           }
@@ -48,11 +48,11 @@ function productController(
         categoryService.getCategories().then(items => {
           $timeout(() => {
             $scope.categories = items;
-            $scope.product = product;
+            $scope.product = angular.copy(product);
           });
         });
       }
-    });
+    }).result.catch(() => {});
   };
   
   vm.removeModal = function(product) {
@@ -75,7 +75,7 @@ function productController(
           $uibModalInstance.dismiss();
         }
       }
-    });
+    }).result.catch(() => {});
   };
 
   $rootScope.$on('categoryChanged', (event, categoryId) => {

@@ -139,14 +139,14 @@
                class="form-control"
                ng-model="product.cost"
                placeholder="Закупочная стоимость">
-        <span class="help-block" ng-show="err.cost">Это поле должно быть заполнено</span>
+        <span class="help-block" ng-show="err.cost">Это поле должно содержать только цифры</span>
       </div>
       <div class="form-group" ng-class="{'has-error': err.retail_cost}">
         <input type="text"
                class="form-control"
                ng-model="product.retail_cost"
                placeholder="Розничная цена">
-        <span class="help-block" ng-show="err.retail_cost">Это поле должно быть заполнено</span>
+        <span class="help-block" ng-show="err.retail_cost">Это поле должно содержать только цифры</span>
       </div>
     </div>
     <div class="modal-footer">
